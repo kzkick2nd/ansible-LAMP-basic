@@ -43,12 +43,14 @@
 # Logwatch
 - name: Install logwatch
   yum: name=logwatch state=present
+- name: Change address to send log report
+  lineinfile: dest=/usr/share/logwatch/default.conf/logwatch.conf regexp="^MailTo" line="MailTo={{ teacher_email }}"
 
 # Rootkit Hunter
 - name: Install Rootkit Hunter
   yum: name=rkhunter state=present
 - name: Change address to send scan report
-  lineinfile: dest=/etc/sysconfig/rkhunter regexp="^MAILTO" line="MAILTO={{ rkhunter_email }}"
+  lineinfile: dest=/etc/sysconfig/rkhunter regexp="^MAILTO" line="MAILTO={{ teacher_email }}"
 
 # fail2ban
 - name: Install fail2ban

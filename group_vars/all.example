@@ -9,8 +9,8 @@ mysql_port: 3306
 # Hostname
 server_hostname: LAMP
 
-# rkhunter
-rkhunter_email: aruga@okist.co.jp
+# teacher as father that u can mail
+teacher_email: root@localhost
 
 # denyhosts
 allowed_ip: localhost
