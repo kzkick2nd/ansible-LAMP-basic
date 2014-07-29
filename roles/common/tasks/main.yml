@@ -1,13 +1,53 @@
 ---
-- name: Install libselinux-python
-  yum: name=libselinux-python state=present
+# initialize yum update
+- name: upgrade all packages
+  yum: name=* state=latest
 
+# EPEL
 - name: Copy the EPEL repository definition
   copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
 
 - name: Create the GPG key for EPEL
   copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
 
+# iptables
 - name: Set up iptables rules
   copy: src=iptables-save dest=/etc/sysconfig/iptables
   notify: restart iptables
+
+# yum-cron
+- name: Install yum-cron
+  yum: name=yum-cron state=present
+
+- name: Start yum-cron
+  service: name=yum-cron state=started enabled=yes
+
+# ClamAV needs EPEL
+- name: Install ClamAV
+  yum: name={{ item }} state=present
+  with_items:
+   - clamav
+   - clamd
+
+- name: Start clamd
+  service: name=clamd state=started enabled=yes
+
+- name: Update ClamAV’s signatures
+  shell: /usr/bin/freshclam
+
+# Logwatch
+- name: Install logwatch
+
+# Rootkit Hunter
+- name: Install Rootkit Hunter
+  yum: name=rkhunter state=present
+
+- name: Update rkhunter data
+  shell: rkhunter --update
+
+# fail2ban
+- name: Install fail2ban
+  yum: name=fail2ban state=present
+
+- name: Start fail2ban
+  service: name=fail2ban state=started enabled=yes
