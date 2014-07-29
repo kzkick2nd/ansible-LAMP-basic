@@ -8,6 +8,6 @@
   roles:
     - common
     # - mysql
-    # - nginx
-    # - php-fpm
-    # - wordpress
+    # - apache
+    # - postfix
+    # - dovecot

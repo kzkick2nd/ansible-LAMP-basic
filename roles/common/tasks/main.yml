@@ -29,7 +29,7 @@
 - name: Start yum-cron
   service: name=yum-cron state=started enabled=yes
 
-# ClamAV (needs EPEL)
+# ClamAV (depend:EPEL)
 - name: Install ClamAV
   yum: name={{ item }} state=present
   with_items:
@@ -47,12 +47,25 @@
 # Rootkit Hunter
 - name: Install Rootkit Hunter
   yum: name=rkhunter state=present
-# エラーでうごかねぇ
-#- name: Update rkhunter data
-#  command: rkhunter --update
+- name: Change address to send scan report
+  lineinfile: dest=/etc/sysconfig/rkhunter regexp="^MAILTO" line="MAILTO={{ rkhunter_email }}"
 
 # fail2ban
 - name: Install fail2ban
   yum: name=fail2ban state=present
 - name: Start fail2ban
   service: name=fail2ban state=started enabled=yes
+
+# denyhosts
+- name: Install denyhosts
+  yum: name=denyhosts state=present
+- name: Start denyhosts
+  service: name=denyhosts state=started enabled=yes
+- name: Add whitelist
+  template: src=allowed-hosts.j2 dest=/var/lib/denyhosts/allowed-hosts
+
+# Utilities
+- name: Install utilities
+  yum: name={{ item }} state=present
+  with_items:
+    - tree
