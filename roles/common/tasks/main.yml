@@ -4,50 +4,55 @@
   yum: name=* state=latest
 
 # EPEL
+- name: Install libselinux-python
+  yum: name=libselinux-python state=present
 - name: Copy the EPEL repository definition
   copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
-
 - name: Create the GPG key for EPEL
   copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
 
 # iptables
 - name: Set up iptables rules
-  copy: src=iptables-save dest=/etc/sysconfig/iptables
-  notify: restart iptables
+  template: src=iptables-save.j2 dest=/etc/sysconfig/iptables
+
+# ssh port
+- name: Change SSH port
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#Port" line="Port {{ ssh_port }}"
+
+# Hostname
+- name: Change Hostname
+  lineinfile: dest=/etc/sysconfig/network regexp="HOSTNAME" line="HOSTNAME={{ server_hostname }}"
 
 # yum-cron
 - name: Install yum-cron
   yum: name=yum-cron state=present
-
 - name: Start yum-cron
   service: name=yum-cron state=started enabled=yes
 
-# ClamAV needs EPEL
+# ClamAV (needs EPEL)
 - name: Install ClamAV
   yum: name={{ item }} state=present
   with_items:
    - clamav
    - clamd
-
 - name: Start clamd
   service: name=clamd state=started enabled=yes
-
 - name: Update ClamAV’s signatures
   shell: /usr/bin/freshclam
 
 # Logwatch
 - name: Install logwatch
+  yum: name=logwatch state=present
 
 # Rootkit Hunter
 - name: Install Rootkit Hunter
   yum: name=rkhunter state=present
-
-- name: Update rkhunter data
-  shell: rkhunter --update
+# エラーでうごかねぇ
+#- name: Update rkhunter data
+#  command: rkhunter --update
 
 # fail2ban
 - name: Install fail2ban
   yum: name=fail2ban state=present
-
 - name: Start fail2ban
   service: name=fail2ban state=started enabled=yes

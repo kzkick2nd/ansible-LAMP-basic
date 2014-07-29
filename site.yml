@@ -1,13 +1,13 @@
 ---
-- name: Install Wordpress, MySQL, Nginx, and PHP-FPM
-  hosts: wordpress-server
+- name: Setup LAMP Basic
+  hosts: LAMP
   user: root
   # remote_user: user
   # sudo: yes
 
   roles:
     - common
-    - mysql
-    - nginx
-    - php-fpm
-    - wordpress
+    # - mysql
+    # - nginx
+    # - php-fpm
+    # - wordpress
