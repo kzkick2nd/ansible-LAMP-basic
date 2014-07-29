@@ -51,6 +51,10 @@
   yum: name=rkhunter state=present
 - name: Change address to send scan report
   lineinfile: dest=/etc/sysconfig/rkhunter regexp="^MAILTO" line="MAILTO={{ teacher_email }}"
+- name: update Rootkit Database
+  command: rkhunter --update
+  # 仕方ない。エラーがでるんだもの
+  ignore_errors: yes
 
 # fail2ban
 - name: Install fail2ban
