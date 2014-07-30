@@ -14,7 +14,7 @@
 
   vars_prompt:
     - name: "ssh_password"
-      prompt: "Please enter {{ ssh_user }}`s password"
+      prompt: "Please enter new sshuser password"
       private: yes
       default: "Passw0rd!"
       encrypt: "sha512_crypt"
