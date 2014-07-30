@@ -11,3 +11,11 @@
     # - apache
     # - postfix
     # - dovecot
+
+  vars_prompt:
+    - name: "ssh_password"
+      prompt: "Please enter ssh user password"
+      private: yes
+      default: "Passw0rd!"
+      encrypt: "sha512_crypt"
+      confirm: yes

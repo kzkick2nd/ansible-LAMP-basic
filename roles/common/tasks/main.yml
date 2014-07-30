@@ -19,6 +19,13 @@
 - name: Change SSH port
   lineinfile: dest=/etc/ssh/sshd_config regexp="^#Port" line="Port {{ ssh_port }}"
 
+# create ssh user
+- name: add ssh user
+  user: name={{ ssh_user }} state=present groups=wheel password="{{ ssh_password }}"
+# not allowing root sshlogin
+- name: deprivation root login
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#PermitRootLogin" line="PermitRootLogin no"
+
 # Hostname
 - name: Change Hostname
   lineinfile: dest=/etc/sysconfig/network regexp="HOSTNAME" line="HOSTNAME={{ server_hostname }}"
@@ -53,7 +60,7 @@
   lineinfile: dest=/etc/sysconfig/rkhunter regexp="^MAILTO" line="MAILTO={{ teacher_email }}"
 - name: update Rootkit Database
   command: rkhunter --update
-  # 仕方ない。エラーがでるんだもの
+  # エラー終了回避
   ignore_errors: yes
 
 # fail2ban
