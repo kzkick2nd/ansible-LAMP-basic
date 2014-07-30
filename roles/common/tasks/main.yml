@@ -14,6 +14,8 @@
 # iptables
 - name: Set up iptables rules
   template: src=iptables-save.j2 dest=/etc/sysconfig/iptables
+- name: Start iptables
+  service: name=iptables enabled=yes
 
 # ssh port
 - name: Change SSH port
