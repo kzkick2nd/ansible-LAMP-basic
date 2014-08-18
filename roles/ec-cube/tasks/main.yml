@@ -1,0 +1,40 @@
+---
+- name: Install LAMP for EC-CUBE
+  yum: name={{ item }} state=present
+  with_items:
+    - mysql-devel
+    - mysql-server
+    - httpd
+    - php
+    - php-mysql
+    - php-common
+    - php-mbstring
+    - php-gd
+    - php-mcrypt
+    - php-xml
+    - ImageMagick
+    - ImageMagick-devel
+
+- name: Start LAMP Service
+  service: name={{ item }} state=started enabled=true
+  with_items:
+    - httpd
+    - mysqld
+
+- name: Download EC-Cube
+  get_url: url=http://downloads.ec-cube.net/src/eccube-2.13.2.tar.gz dest=/var/www/eccube-2.13.2.tar.gz
+
+- name: Extract archive
+  command: chdir=/var/www/ /bin/tar xvf eccube-2.13.2.tar.gz creates=/var/www/ec-cube
+
+#- name: Add group "eccube"
+#  group: name=eccube
+
+# - name: Add user "eccube"
+#   user: name=eccube group=eccube home=/srv/eccube/
+
+- name: Create EC-CUBE database
+  mysql_db: name={{ eccube_db_name }} state=present
+
+- name: Create EC-CUBE database user
+  mysql_user: name={{ eccube_db_user }} password={{ eccube_db_password }} priv={{ eccube_db_name }}.*:ALL host='localhost' state=present
