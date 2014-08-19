@@ -3,6 +3,10 @@
 - Requires Ansible 1.2 or newer
 - Expects CentOS/RHEL 6.x hosts
 
+  ansible-playbook -i hosts site.yml
+
+for vagrant needs -k(ask sudo pass) option to act as root
+
 よくあるLAMPのAnsibleレシピだけれど、セキュリティはがんばってみてる
 
 2014/08/19 EC-CUBE用のレシピ実験に使用中

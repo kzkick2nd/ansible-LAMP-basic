@@ -21,13 +21,14 @@
       encrypt: "sha512_crypt"
       confirm: yes
 
-  eccube_db_name:
-  eccube_db_user:
+    - name: "mysql_root_password"
+      prompt: "Please enter MySQL root password"
+      private: yes
+      default: "Passw0rd!"
+      confirm: yes
 
-  vars_prompt:
     - name: "eccube_db_password"
       prompt: "Please enter eccube_db password"
       private: yes
       default: "Passw0rd!"
-      encrypt: "sha512_crypt"
       confirm: yes

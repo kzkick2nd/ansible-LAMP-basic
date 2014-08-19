@@ -1,12 +1,9 @@
 ---
-- name: Install LAMP for EC-CUBE
+- name: Install PHP packages+ for EC-CUBE
   yum: name={{ item }} state=present
   with_items:
-    - mysql-devel
-    - mysql-server
     - httpd
     - php
-    - php-mysql
     - php-common
     - php-mbstring
     - php-gd
@@ -15,26 +12,50 @@
     - ImageMagick
     - ImageMagick-devel
 
-- name: Start LAMP Service
-  service: name={{ item }} state=started enabled=true
-  with_items:
-    - httpd
-    - mysqld
-
 - name: Download EC-Cube
   get_url: url=http://downloads.ec-cube.net/src/eccube-2.13.2.tar.gz dest=/var/www/eccube-2.13.2.tar.gz
 
 - name: Extract archive
   command: chdir=/var/www/ /bin/tar xvf eccube-2.13.2.tar.gz creates=/var/www/ec-cube
 
-#- name: Add group "eccube"
-#  group: name=eccube
+- name: Add group "eccube"
+ group: name=eccube
 
-# - name: Add user "eccube"
-#   user: name=eccube group=eccube home=/srv/eccube/
+- name: Add user "eccube"
+  user: name=eccube group=eccube home=/srv/eccube/
+
+- name: Install Mysql package
+  yum: name={{ item }} state=present
+  with_items:
+    - php-mysql
+    - mysql-devel
+    - mysql-server
+    - MySQL-python
+    - libselinux-python
+    - libsemanage-python
+
+- name: Start LAMP Service
+  service: name={{ item }} state=started enabled=true
+  with_items:
+    - httpd
+    - mysqld
+
+- name: Configure SELinux to start mysql on any port
+  seboolean: name=mysql_connect_any state=true persistent=yes
+
+# MySQLの初期設定
+# rootパス変更後はアクセス不能になるのでlogin_passwordオプション必要
+- name: update mysql root password for all root accounts
+  mysql_user: name=root password={{ mysql_root_password }} state=present
+
+- name: ensure anonymous users are not in the database
+  mysql_user: name='' state=absent login_user=root login_password={{ mysql_root_password }}
+
+- name: remove the test database
+  mysql_db: name=test state=absent login_user=root login_password={{ mysql_root_password }}
 
 - name: Create EC-CUBE database
-  mysql_db: name={{ eccube_db_name }} state=present
+  mysql_db: name={{ eccube_db_name }} state=present login_user=root login_password={{ mysql_root_password }}
 
 - name: Create EC-CUBE database user
-  mysql_user: name={{ eccube_db_user }} password={{ eccube_db_password }} priv={{ eccube_db_name }}.*:ALL host='localhost' state=present
+  mysql_user: name={{ eccube_db_user }} password={{ eccube_db_password }} priv={{ eccube_db_name }}.*:ALL host='localhost' state=present login_user=root login_password={{ mysql_root_password }}
