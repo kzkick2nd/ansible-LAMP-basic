@@ -7,7 +7,7 @@
 
   roles:
     - common
-    - ec-cube
+    # - ec-cube
     # - mysql
     # - apache
     # - postfix
@@ -15,20 +15,20 @@
 
   vars_prompt:
     - name: "ssh_password"
-      prompt: "Please enter new sshuser password"
+      prompt: "SSH User Password"
       private: yes
       default: "Passw0rd!"
       encrypt: "sha512_crypt"
       confirm: yes
 
     - name: "mysql_root_password"
-      prompt: "Please enter MySQL root password"
+      prompt: "MySQL root Password"
       private: yes
       default: "Passw0rd!"
       confirm: yes
 
     - name: "eccube_db_password"
-      prompt: "Please enter eccube_db password"
+      prompt: "eccube_db password"
       private: yes
       default: "Passw0rd!"
       confirm: yes
