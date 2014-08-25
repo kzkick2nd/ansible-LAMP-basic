@@ -7,7 +7,7 @@
 
   roles:
     - common
-    # - ec-cube
+    - ec-cube
     # - mysql
     # - apache
     # - postfix

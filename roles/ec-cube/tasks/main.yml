@@ -14,55 +14,65 @@
 
 # Apacheの初期設定
 - name: Create httpd(2.2.15) configuration file
-  template: src=httpd.2.2.conf.j2 dest=/etc/httpd/conf/httpd.conf
+  template: src=httpd.2.2.conf.j2 dest=/etc/httpd/conf/httpd.conf backup=yes
 
-- name: Download EC-Cube
-  get_url: url=http://downloads.ec-cube.net/src/eccube-2.13.2.tar.gz dest=/var/www/eccube-2.13.2.tar.gz
+# - name: Download EC-Cube
+#   get_url: url=http://downloads.ec-cube.net/src/eccube-2.13.2.tar.gz dest=/var/www/eccube-2.13.2.tar.gz
 
-- name: Extract archive
-  command: chdir=/var/www/ /bin/tar xvf eccube-2.13.2.tar.gz creates=/var/www/ec-cube
+# - name: Extract archive
+#   command: chdir=/var/www/ /bin/tar xvf eccube-2.13.2.tar.gz creates=/var/www/ec-cube
 
-- name: Add group "eccube"
-  group: name=eccube
+# - name: Add group "eccube"
+#   group: name=eccube
 
-- name: Add user "eccube"
-  user: name=eccube group=eccube home=/srv/eccube/
+# - name: Add user "eccube"
+#   user: name=eccube group=eccube home=/srv/eccube/
 
-- name: Install Mysql package
+# - name: Install Mysql package
+#   yum: name={{ item }} state=present
+#   with_items:
+#     - php-mysql
+#     - mysql-devel
+#     - mysql-server
+#     - MySQL-python
+#     - libselinux-python
+#     - libsemanage-python
+
+# - name: Start LAMP Service
+#   service: name={{ item }} state=started enabled=true
+#   with_items:
+#     - httpd
+#     - mysqld
+
+# - name: Configure SELinux to start mysql on any port
+#   seboolean: name=mysql_connect_any state=true persistent=yes
+
+# # MySQLの初期設定
+# - name: Create Mysql configuration file
+#   template: src=my.cnf.j2 dest=/etc/my.cnf backup=yes
+
+# - name: ensure anonymous users are not in the database
+#   mysql_user: name='' state=absent
+
+# - name: remove the test database
+#   mysql_db: name=test state=absent
+
+# - name: Create EC-CUBE database
+#   mysql_db: name={{ eccube_db_name }} state=present
+
+# - name: Create EC-CUBE database user
+#   mysql_user: name={{ eccube_db_user }} password={{ eccube_db_password }} priv={{ eccube_db_name }}.*:ALL host='localhost' state=present
+
+# - name: update mysql root password for all root accounts
+#   mysql_user: name=root password={{ mysql_root_password }} state=present
+
+# mod_security
+- name: Install mod_security & mod_security_crs
   yum: name={{ item }} state=present
   with_items:
-    - php-mysql
-    - mysql-devel
-    - mysql-server
-    - MySQL-python
-    - libselinux-python
-    - libsemanage-python
+    - mod_security
+    - mod_security_crs
 
-- name: Start LAMP Service
-  service: name={{ item }} state=started enabled=true
-  with_items:
-    - httpd
-    - mysqld
-
-- name: Configure SELinux to start mysql on any port
-  seboolean: name=mysql_connect_any state=true persistent=yes
-
-# MySQLの初期設定
-- name: Create Mysql configuration file
-  template: src=my.cnf.j2 dest=/etc/my.cnf
-
-- name: ensure anonymous users are not in the database
-  mysql_user: name='' state=absent
-
-- name: remove the test database
-  mysql_db: name=test state=absent
-
-- name: Create EC-CUBE database
-  mysql_db: name={{ eccube_db_name }} state=present
-
-- name: Create EC-CUBE database user
-  mysql_user: name={{ eccube_db_user }} password={{ eccube_db_password }} priv={{ eccube_db_name }}.*:ALL host='localhost' state=present
-
-- name: update mysql root password for all root accounts
-  mysql_user: name=root password={{ mysql_root_password }} state=present
-
+# テンプレ位置注意
+- name: Create mod_security(2.7.3) configuration file
+  template: src=mod_security.2.7.conf.j2 dest=/etc/httpd/conf.d/mod_security.conf backup=yes
