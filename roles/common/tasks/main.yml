@@ -1,15 +1,15 @@
 ---
-# initialize yum update
+# # initialize yum update
 # - name: upgrade all packages
 #   yum: name=* state=latest
 
 # EPEL
 - name: Install libselinux-python
   yum: name=libselinux-python state=present
-- name: Copy the EPEL repository definition
-  copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
-- name: Create the GPG key for EPEL
-  copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
+# - name: Copy the EPEL repository definition
+#   copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
+# - name: Create the GPG key for EPEL
+#   copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
 
 # # iptables
 # - name: Set up iptables rules
@@ -79,10 +79,34 @@
 # - name: Add whitelist
 #   template: src=allowed-hosts.j2 dest=/var/lib/denyhosts/allowed-hosts
 
-# Utilities
+# # Utilities
 # - name: Install utilities
 #   yum: name={{ item }} state=present
 #   with_items:
 #     - tree
 #     - zsh
 #     - git
+
+# # inotifywait
+# - name: Install inotify-tools
+#   yum: name=inotify-tools state=present
+# - name: Add inotify.sh
+#   template: src=inotify.sh.j2 dest=/etc/rc.d/init.d/inotifywait mode=0755
+# - name: Add inotify.conf
+#   template: src=inotify.conf.j2 dest=/etc/inotifywait.conf
+# - name: Set inotify logrotate
+#   template: src=inotify.log.j2 dest=/etc/logrotate.d/inotify
+# - name: Start inotifywait
+#   service: name=inotifywait state=started enabled=yes
+
+# AIDE
+- name: Install AIDE
+  yum: name=aide state=present
+- name: Init AIDE
+  command: aide --init
+- name: Init AIDE DB
+  command: cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+- name: Set AIDE cron.daily
+  template: src=aide.cron.j2 dest=/etc/cron.daily/aide mode=0755
+- name: Set AIDE logrotate
+  template: src=aide.log.j2 dest=/etc/logrotate.d/aide

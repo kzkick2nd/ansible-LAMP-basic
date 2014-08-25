@@ -1,20 +1,20 @@
 ---
-- name: Install PHP packages+ for EC-CUBE
-  yum: name={{ item }} state=present
-  with_items:
-    - httpd
-    - php
-    - php-common
-    - php-mbstring
-    - php-gd
-    - php-mcrypt
-    - php-xml
-    - ImageMagick
-    - ImageMagick-devel
+# - name: Install PHP packages+ for EC-CUBE
+#   yum: name={{ item }} state=present
+#   with_items:
+#     - httpd
+#     - php
+#     - php-common
+#     - php-mbstring
+#     - php-gd
+#     - php-mcrypt
+#     - php-xml
+#     - ImageMagick
+#     - ImageMagick-devel
 
-# Apacheの初期設定
-- name: Create httpd(2.2.15) configuration file
-  template: src=httpd.2.2.conf.j2 dest=/etc/httpd/conf/httpd.conf backup=yes
+# # Apacheの初期設定
+# - name: Create httpd(2.2.15) configuration file
+#   template: src=httpd.2.2.conf.j2 dest=/etc/httpd/conf/httpd.conf backup=yes
 
 # - name: Download EC-Cube
 #   get_url: url=http://downloads.ec-cube.net/src/eccube-2.13.2.tar.gz dest=/var/www/eccube-2.13.2.tar.gz
@@ -66,13 +66,13 @@
 # - name: update mysql root password for all root accounts
 #   mysql_user: name=root password={{ mysql_root_password }} state=present
 
-# mod_security
-- name: Install mod_security & mod_security_crs
-  yum: name={{ item }} state=present
-  with_items:
-    - mod_security
-    - mod_security_crs
+# # mod_security
+# - name: Install mod_security & mod_security_crs
+#   yum: name={{ item }} state=present
+#   with_items:
+#     - mod_security
+#     - mod_security_crs
 
-# テンプレ位置注意
-- name: Create mod_security(2.7.3) configuration file
-  template: src=mod_security.2.7.conf.j2 dest=/etc/httpd/conf.d/mod_security.conf backup=yes
+# # テンプレ位置注意
+# - name: Create mod_security(2.7.3) configuration file
+#   template: src=mod_security.2.7.conf.j2 dest=/etc/httpd/conf.d/mod_security.conf backup=yes

@@ -22,15 +22,7 @@ start() {
    --exclude '.*\.sw[pox].*' \
    -e $EVENT \
    -o $LOGFILE \
-   -dmrq $MONITOR | while [ 1 ]; do
-    messages=""
-    while read -t $TIMEOUT line; do
-        messages="${messages}$line@RET@"
-    done
-    if [ -n "$messages" ]; then
-        echo $messages | sed 's/@RET@/\n/g' | \
-            /usr/bin/Mail -s "[notice] $MONITOR" $MAILTO
-    fi
+   -dmrq $MONITOR
 
    RETVAL=$?
    echo
