@@ -1,6 +1,6 @@
 ---
 - name: Setup LAMP Basic
-  hosts: LAMP
+  hosts: ERO
   user: root
   # remote_user: user
   # sudo: yes

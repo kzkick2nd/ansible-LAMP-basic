@@ -63,4 +63,16 @@ LoadModule security2_module modules/mod_security2.so
     SecRule REMOTE_ADDR "^127.0.0.1$" "phase:1,nolog,allow,ctl:ruleEngine=Off,ctl:auditEngine=Off,id:1001"
     SecRule REMOTE_ADDR "^{{ allowed_ip }}" "phase:1,nolog,allow,ctl:ruleEngine=Off,ctl:auditEngine=Off,id:1002"
 
+    <LocationMatch "(/mypage/change.php)">
+        # 連続アスタリスク禁止
+        SecRuleRemoveById 981173
+    </LocationMatch>
+    <LocationMatch "(/mypage/change.php|/contact/|/entry/|/mypage/delivery_addr.php|/products/review.php|/products/list.php)">
+        # 全角文字連続使用禁止
+        SecRuleRemoveById 960024
+        # 全角数字嫌い
+        SecRuleRemoveById 981242
+        SecRuleRemoveById 981243
+    </LocationMatch>
+
 </IfModule>

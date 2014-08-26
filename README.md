@@ -5,12 +5,13 @@
 
   ansible-playbook -i hosts site.yml
 
-for vagrant needs -k(ask sudo pass) option to act as root
+for vagrant needs -k(ask sudo pass) option to act as root.
 
 よくあるLAMPのAnsibleレシピだけれど、セキュリティはがんばってみてる
 
 ####追記
 2014/08/19 EC-CUBE用のレシピ実験に使用中
+
 2014/08/20 yumパッケージVersions
 - httpd 2.2.15
 - mysql 5.1.73
@@ -28,8 +29,8 @@ for vagrant needs -k(ask sudo pass) option to act as root
 - rkhunterの導入 OK
 - fail2banの導入 OK
 - denyhostsの導入 OK
-- inotifywaitの導入
-- Tripwireの設定（AIDEに変更かな？）
+- inotifywaitの導入 OK
+- Tripwireの設定（AIDEに変更かな？） => AIDE OK
 - 起動デーモン選別
 - IPv6の設定
 
@@ -42,7 +43,6 @@ for vagrant needs -k(ask sudo pass) option to act as root
 - KeepAlive設定 OFF
 - クリックジャッキング OFF
 - Trace OFF
-- データバックアップ
 
 ####mod_security とりまOK
 #####activated_rules
@@ -58,5 +58,7 @@ for vagrant needs -k(ask sudo pass) option to act as root
 - slowログ（3秒）
 - innoDB・UTF8デフォルト
 - DBバックアップ
+
+###バックアップ
 
 最後に再起動させたいけれど。Delayでできるかな？
