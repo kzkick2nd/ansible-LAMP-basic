@@ -1,7 +1,7 @@
 ---
 # initialize yum update
-- name: upgrade all packages
-  yum: name=* state=latest
+# - name: upgrade all packages
+#   yum: name=* state=latest
 
 # EPEL
 - name: Install libselinux-python
@@ -12,21 +12,21 @@
   copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
 
 # iptables
-- name: Set up iptables rules
-  template: src=iptables-save.j2 dest=/etc/sysconfig/iptables
-- name: Start iptables
-  service: name=iptables enabled=yes
+# - name: Set up iptables rules
+#   template: src=iptables-save.j2 dest=/etc/sysconfig/iptables
+# - name: Start iptables
+#   service: name=iptables enabled=yes
 
 # ssh port
-- name: Change SSH port
-  lineinfile: dest=/etc/ssh/sshd_config regexp="^#Port" line="Port {{ ssh_port }}"
+# - name: Change SSH port
+#   lineinfile: dest=/etc/ssh/sshd_config regexp="^#Port" line="Port {{ ssh_port }}"
 
 # create ssh user
 - name: add ssh user
   user: name={{ ssh_user }} state=present groups=wheel password="{{ ssh_password }}"
 # not allowing root sshlogin
-- name: deprivation root login
-  lineinfile: dest=/etc/ssh/sshd_config regexp="^#PermitRootLogin" line="PermitRootLogin no"
+# - name: deprivation root login
+#   lineinfile: dest=/etc/ssh/sshd_config regexp="^#PermitRootLogin" line="PermitRootLogin no"
 
 # Hostname
 # - name: Change Hostname
@@ -70,6 +70,10 @@
   yum: name=fail2ban state=present
 - name: Start fail2ban
   service: name=fail2ban state=started enabled=yes
+- name: Change address to send ban report
+  replace: dest=/etc/fail2ban/jail.conf regexp='you@example\.com' replace='{{ teacher_email }}' backup=yes
+- name: Change sender address
+  replace: dest=/etc/fail2ban/jail.conf regexp='fail2ban@example\.com' replace='fail2ban@localhost' backup=yes
 
 # denyhosts
 - name: Install denyhosts

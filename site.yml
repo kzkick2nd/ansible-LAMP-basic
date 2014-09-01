@@ -1,13 +1,13 @@
 ---
 - name: Setup LAMP Basic
-  hosts: ERO
+  hosts: CarchsEC-VM
   user: root
   # remote_user: user
   # sudo: yes
 
   roles:
     - common
-    - ec-cube
+    # - ec-cube
     # - mysql
     # - apache
     # - postfix
