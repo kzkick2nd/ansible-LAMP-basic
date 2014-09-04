@@ -1,7 +1,7 @@
 ---
 # initialize yum update
-# - name: upgrade all packages
-#   yum: name=* state=latest
+- name: upgrade all packages
+  yum: name=* state=latest
 
 # EPEL
 - name: Install libselinux-python
@@ -22,9 +22,9 @@
 #   lineinfile: dest=/etc/ssh/sshd_config regexp="^#Port" line="Port {{ ssh_port }}"
 
 # create ssh user
-- name: add ssh user
-  user: name={{ ssh_user }} state=present groups=wheel password="{{ ssh_password }}"
-# not allowing root sshlogin
+# - name: add ssh user
+#   user: name={{ ssh_user }} state=present groups=wheel password="{{ ssh_password }}"
+# # not allowing root sshlogin
 # - name: deprivation root login
 #   lineinfile: dest=/etc/ssh/sshd_config regexp="^#PermitRootLogin" line="PermitRootLogin no"
 
@@ -76,12 +76,12 @@
   replace: dest=/etc/fail2ban/jail.conf regexp='fail2ban@example\.com' replace='fail2ban@localhost' backup=yes
 
 # denyhosts
-- name: Install denyhosts
-  yum: name=denyhosts state=present
-- name: Start denyhosts
-  service: name=denyhosts state=started enabled=yes
-- name: Add whitelist
-  template: src=allowed-hosts.j2 dest=/var/lib/denyhosts/allowed-hosts
+# - name: Install denyhosts
+#   yum: name=denyhosts state=present
+# - name: Start denyhosts
+#   service: name=denyhosts state=started enabled=yes
+# - name: Add whitelist
+#   template: src=allowed-hosts.j2 dest=/var/lib/denyhosts/allowed-hosts
 
 # Utilities
 - name: Install utilities
