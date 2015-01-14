@@ -1,0 +1,34 @@
+---
+- name: Setup LAMP Basic
+  hosts:
+  user: root
+  # remote_user: user
+  # sudo: yes
+
+  roles:
+    - common
+    - ec-cube
+    # - mysql
+    # - apache
+    # - postfix
+    # - dovecot
+
+  vars_prompt:
+    - name: "ssh_password"
+      prompt: "SSH User Password"
+      private: yes
+      default: "Passw0rd!"
+      encrypt: "sha512_crypt"
+      confirm: yes
+
+    - name: "mysql_root_password"
+      prompt: "MySQL root Password"
+      private: yes
+      default: "Passw0rd!"
+      confirm: yes
+
+    - name: "eccube_db_password"
+      prompt: "eccube_db password"
+      private: yes
+      default: "Passw0rd!"
+      confirm: yes
