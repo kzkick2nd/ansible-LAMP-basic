@@ -12,25 +12,25 @@
   copy: src=RPM-GPG-KEY-EPEL-6 dest=/etc/pki/rpm-gpg
 
 # iptables
-# - name: Set up iptables rules
-#   template: src=iptables-save.j2 dest=/etc/sysconfig/iptables
-# - name: Start iptables
-#   service: name=iptables enabled=yes
+- name: Set up iptables rules
+  template: src=iptables-save.j2 dest=/etc/sysconfig/iptables
+- name: Start iptables
+  service: name=iptables enabled=yes
 
 # ssh port
-# - name: Change SSH port
-#   lineinfile: dest=/etc/ssh/sshd_config regexp="^#Port" line="Port {{ ssh_port }}"
+- name: Change SSH port
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#Port" line="Port {{ ssh_port }}"
 
 # create ssh user
-# - name: add ssh user
-#   user: name={{ ssh_user }} state=present groups=wheel password="{{ ssh_password }}"
-# # not allowing root sshlogin
-# - name: deprivation root login
-#   lineinfile: dest=/etc/ssh/sshd_config regexp="^#PermitRootLogin" line="PermitRootLogin no"
+- name: add ssh user
+  user: name={{ ssh_user }} state=present groups=wheel password="{{ ssh_password }}"
+# not allowing root sshlogin
+- name: deprivation root login
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^#PermitRootLogin" line="PermitRootLogin no"
 
 # Hostname
-# - name: Change Hostname
-#   lineinfile: dest=/etc/sysconfig/network regexp="HOSTNAME" line="HOSTNAME={{ server_hostname }}"
+- name: Change Hostname
+  lineinfile: dest=/etc/sysconfig/network regexp="HOSTNAME" line="HOSTNAME={{ server_hostname }}"
 
 # yum-cron
 - name: Install yum-cron
@@ -53,13 +53,13 @@
 - name: Install logwatch
   yum: name=logwatch state=present
 - name: Change address to send log report
-  lineinfile: dest=/usr/share/logwatch/default.conf/logwatch.conf regexp="^MailTo" line="MailTo={{ teacher_email }}"
+  lineinfile: dest=/usr/share/logwatch/default.conf/logwatch.conf regexp="^MailTo" line="MailTo={{ administrator_email }}"
 
 # Rootkit Hunter
 - name: Install Rootkit Hunter
   yum: name=rkhunter state=present
 - name: Change address to send scan report
-  lineinfile: dest=/etc/sysconfig/rkhunter regexp="^MAILTO" line="MAILTO={{ teacher_email }}"
+  lineinfile: dest=/etc/sysconfig/rkhunter regexp="^MAILTO" line="MAILTO={{ administrator_email }}"
 - name: update Rootkit Database
   command: rkhunter --update
   # エラー終了回避
@@ -71,17 +71,17 @@
 - name: Start fail2ban
   service: name=fail2ban state=started enabled=yes
 - name: Change address to send ban report
-  replace: dest=/etc/fail2ban/jail.conf regexp='you@example\.com' replace='{{ teacher_email }}' backup=yes
+  replace: dest=/etc/fail2ban/jail.conf regexp='you@example\.com' replace='{{ administrator_email }}' backup=yes
 - name: Change sender address
   replace: dest=/etc/fail2ban/jail.conf regexp='fail2ban@example\.com' replace='fail2ban@localhost' backup=yes
 
 # denyhosts
-# - name: Install denyhosts
-#   yum: name=denyhosts state=present
-# - name: Start denyhosts
-#   service: name=denyhosts state=started enabled=yes
-# - name: Add whitelist
-#   template: src=allowed-hosts.j2 dest=/var/lib/denyhosts/allowed-hosts
+- name: Install denyhosts
+  yum: name=denyhosts state=present
+- name: Start denyhosts
+  service: name=denyhosts state=started enabled=yes
+- name: Add whitelist
+  template: src=allowed-hosts.j2 dest=/var/lib/denyhosts/allowed-hosts
 
 # Utilities
 - name: Install utilities

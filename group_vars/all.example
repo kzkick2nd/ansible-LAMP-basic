@@ -10,7 +10,7 @@ mysql_port: 3306
 server_hostname: LAMP
 
 # teacher as father that u can mail
-teacher_email: root@localhost
+administrator_email: root@localhost
 
 # denyhosts
 allowed_ip: localhost
